@@ -46,9 +46,9 @@ namespace Cameleon
 
             app.UseEndpoints(endpoints =>
             {
-                var fallbackMapper = app.ApplicationServices.GetService(typeof(IFallbackMapper)) as FallbackMapper;
+                var fallbackMapper = app.ApplicationServices.GetService(typeof(IDynamicRouter)) as IDynamicRouter;
                 endpoints.MapControllers();
-                endpoints.MapFallback(fallbackMapper.Do);
+                endpoints.MapFallback(fallbackMapper.Route);
             });
         }
     }

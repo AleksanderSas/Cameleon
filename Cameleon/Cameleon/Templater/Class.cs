@@ -7,8 +7,6 @@ namespace Cameleon.Templater
     {
         public static Task Do(HttpContext context)
         {
-            
-
             return Task.CompletedTask;
         }
     }

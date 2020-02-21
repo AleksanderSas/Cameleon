@@ -1,0 +1,6 @@
+{
+	"path": "test/abc",
+	"method" : "GET",
+	"httpCode": 200,
+	"body": "{\"message\": \"success\" }"
+}

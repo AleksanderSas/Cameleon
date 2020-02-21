@@ -4,11 +4,15 @@ namespace Cameleon.Model
 {
     public class Configuration
     {
-        [Required(ErrorMessage = "The Data field is required.")]
-        public string Data { get; set; }
+        [Required(ErrorMessage = "The path field is required.")]
+        public string Path { get; set; }
 
+        [Required(ErrorMessage = "The method field is required.")]
+        public string Method { get; set; }
 
-        [Required(ErrorMessage = "The Num field is required.")]
-        public int Num { get; set; }
+        public string Body { get; set; }
+
+        [Required(ErrorMessage = "The httpCode field is required.")]
+        public int HttpCode { get; set; }
     }
 }

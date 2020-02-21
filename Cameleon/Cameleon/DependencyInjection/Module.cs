@@ -8,7 +8,7 @@ namespace Cameleon.DependencyInjection
     {
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IFallbackMapper, FallbackMapper>();
+            services.AddSingleton<ITemplate, DefaultTemplate>();
             services.AddSingleton<IDynamicRouter, DynamicRouter>();
         }
     }
