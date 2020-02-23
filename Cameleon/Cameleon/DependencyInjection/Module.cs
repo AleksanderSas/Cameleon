@@ -8,6 +8,8 @@ namespace Cameleon.DependencyInjection
     {
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<IUrlNormalizer, UrlNormalizer>();
+
             services.AddSingleton<ITemplate, DefaultTemplate>();
             services.AddSingleton<IDynamicRouter, DynamicRouter>();
             services.AddSingleton<IRecorder, Recorder>();

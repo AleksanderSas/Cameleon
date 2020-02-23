@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("CameleonTests")]
 namespace Cameleon.Services
 {
     public interface IDynamicRouter
@@ -16,17 +18,19 @@ namespace Cameleon.Services
         private readonly IDictionary<(string, string), TemplateSequence> _templates;
         private readonly ITemplate _defaultTemplate;
         private readonly IRecorder _recorder;
+        private readonly IUrlNormalizer _normalizer;
 
-        public DynamicRouter(ITemplate defaultTemplate, IRecorder recorder)
+        public DynamicRouter(ITemplate defaultTemplate, IRecorder recorder, IUrlNormalizer normalizer)
         {
             _defaultTemplate = defaultTemplate;
             _recorder = recorder;
+            _normalizer = normalizer;
             _templates = new Dictionary<(string, string), TemplateSequence>();
         }
 
         public void AddTemplate(string url, string method, ITemplate template, bool sequenceSuccessor)
         {
-            url = Normalize(url);
+            url = _normalizer.Normalize(url);
             var key = (url, method);
             if (sequenceSuccessor && _templates.TryGetValue(key, out var value))
             {
@@ -38,20 +42,9 @@ namespace Cameleon.Services
             }
         }
 
-        private static string Normalize(string url)
-        {
-            url = url.Replace('\\', '/');
-            if (url[0] != '/')
-            {
-                url = "/" + url;
-            }
-
-            return url;
-        }
-
         public bool Delete(string url, string method)
         {
-            url = Normalize(url);
+            url = _normalizer.Normalize(url);
             return _templates.Remove((url, method));
         }
 
