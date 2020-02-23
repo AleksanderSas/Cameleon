@@ -8,7 +8,7 @@ namespace Cameleon.Services
         Task Execute(HttpContext context);
     }
 
-    public class SimpleTemplate : ITemplate
+    internal class SimpleTemplate : ITemplate
     {
         private readonly string _body;
         private readonly int _statusCode;

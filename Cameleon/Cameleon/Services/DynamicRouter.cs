@@ -6,22 +6,39 @@ namespace Cameleon.Services
 {
     public interface IDynamicRouter
     {
-        void AddTemplate(string url, string method, ITemplate template);
+        void AddTemplate(string url, string method, ITemplate template, bool sequenceSuccessor);
+        bool Delete(string url, string method);
         Task Route(HttpContext context);
     }
 
-    public class DynamicRouter : IDynamicRouter
+    internal class DynamicRouter : IDynamicRouter
     {
-        private readonly IDictionary<(string, string), ITemplate> _templates;
+        private readonly IDictionary<(string, string), TemplateSequence> _templates;
         private readonly ITemplate _defaultTemplate;
+        private readonly IRecorder _recorder;
 
-        public DynamicRouter(ITemplate defaultTemplate)
+        public DynamicRouter(ITemplate defaultTemplate, IRecorder recorder)
         {
             _defaultTemplate = defaultTemplate;
-            _templates = new Dictionary<(string, string), ITemplate>();
+            _recorder = recorder;
+            _templates = new Dictionary<(string, string), TemplateSequence>();
         }
 
-        public void AddTemplate(string url, string method, ITemplate template)
+        public void AddTemplate(string url, string method, ITemplate template, bool sequenceSuccessor)
+        {
+            url = Normalize(url);
+            var key = (url, method);
+            if (sequenceSuccessor && _templates.TryGetValue(key, out var value))
+            {
+                value.Add(template);
+            }
+            else
+            {
+                _templates[key] = new TemplateSequence(template);
+            }
+        }
+
+        private static string Normalize(string url)
         {
             url = url.Replace('\\', '/');
             if (url[0] != '/')
@@ -29,14 +46,21 @@ namespace Cameleon.Services
                 url = "/" + url;
             }
 
-            _templates[(url, method)] = template;
+            return url;
         }
 
-        public Task Route(HttpContext context)
+        public bool Delete(string url, string method)
         {
+            url = Normalize(url);
+            return _templates.Remove((url, method));
+        }
+
+        public async Task Route(HttpContext context)
+        {
+            await _recorder.Record(context.Request);
             var key = (context.Request.Path.Value, context.Request.Method);
             var template = _templates.TryGetValue(key, out var value) ? value : _defaultTemplate;
-            return template.Execute(context);
+            await template.Execute(context);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Cameleon.DependencyInjection
         {
             services.AddSingleton<ITemplate, DefaultTemplate>();
             services.AddSingleton<IDynamicRouter, DynamicRouter>();
+            services.AddSingleton<IRecorder, Recorder>();
         }
     }
 }

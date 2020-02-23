@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Cameleon.Services
 {
-    public class DefaultTemplate : ITemplate
+    internal class DefaultTemplate : ITemplate
     {
         public Task Execute(HttpContext context)
         {
