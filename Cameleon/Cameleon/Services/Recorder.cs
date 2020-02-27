@@ -25,8 +25,14 @@ namespace Cameleon.Services
 
         public IEnumerable<RequestRecord> Find(string method, string urlPattern)
         {
-            method = method.ToUpper();
-            return _requests.Where(x => x.Method == method && Regex.IsMatch(x.Url, urlPattern));
+            method = method?.ToUpper();
+            return _requests.Where(x => Comparer(method, urlPattern, x));
+        }
+
+        private static bool Comparer(string method, string urlPattern, RequestRecord x)
+        {
+            return (method == null || x.Method == method) &&
+                   (urlPattern == null || Regex.IsMatch(x.Url, urlPattern));
         }
 
         public async Task Record(HttpRequest request)

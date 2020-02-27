@@ -11,6 +11,7 @@ namespace Cameleon.Services
         void AddTemplate(string url, string method, ITemplate template, bool sequenceSuccessor);
         bool Delete(string url, string method);
         Task Route(HttpContext context);
+        void Get();
     }
 
     internal class DynamicRouter : IDynamicRouter
@@ -46,6 +47,11 @@ namespace Cameleon.Services
         {
             url = _normalizer.Normalize(url);
             return _templates.Remove((url, method));
+        }
+
+        public void Get()
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task Route(HttpContext context)

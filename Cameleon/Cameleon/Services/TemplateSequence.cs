@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cameleon.Services
@@ -10,6 +8,8 @@ namespace Cameleon.Services
     {
         private List<ITemplate> Templates { get; set; }
         private int InvocationNo { get; set; }
+
+        public string Name => throw new System.NotImplementedException();
 
         public TemplateSequence(ITemplate template)
         {

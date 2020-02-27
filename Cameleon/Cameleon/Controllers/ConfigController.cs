@@ -10,19 +10,10 @@ namespace Cameleon.Controllers
     public class ConfigController : ControllerBase
     {
         private IDynamicRouter _router;
-        private IRecorder _recorder;
 
-        public ConfigController(IDynamicRouter router, IRecorder recorder)
+        public ConfigController(IDynamicRouter router)
         {
             _router = router;
-            _recorder = recorder;
-        }
-
-        [HttpGet("")]
-        public IActionResult Get(string method, string pathPatters)
-        {
-            var records = _recorder.Find(method, pathPatters);
-            return Ok(new { Records = records });
         }
 
         [HttpPost("")]
